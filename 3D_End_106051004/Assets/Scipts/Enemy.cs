@@ -3,6 +3,7 @@ using UnityEngine.AI;   // 引用 人工智慧 API
 
 public class Enemy : MonoBehaviour
 {
+    //增加變數並界定此變數之範圍。這個變數可以在Inspector調整。
     [Header("移動速度"), Range(0, 50)]
     public float speed = 3;
     [Header("停止距離"), Range(0, 50)]
@@ -13,10 +14,13 @@ public class Enemy : MonoBehaviour
     public Transform atkPoint;
     [Header("攻擊長度"), Range(0f, 5f)]
     public float atkLength;
+    [Header("攻擊力"), Range(0, 500)]
+    public float atk = 30;
 
     private Transform player;
     private NavMeshAgent nav;
     private Animator ani;
+    
     /// <summary>
     /// 計時器
     /// </summary>
@@ -59,7 +63,7 @@ public class Enemy : MonoBehaviour
     private RaycastHit hit;
 
     /// <summary>
-    /// 攻擊
+    /// 敵人.攻擊事件
     /// </summary>
     private void Attack()
     {
@@ -87,10 +91,35 @@ public class Enemy : MonoBehaviour
                 if (Physics.Raycast(atkPoint.position, atkPoint.forward, out hit, atkLength, 1 << 8))
                 {
                     // 碰撞物件.取得元件<玩家>().受傷()
-                    hit.collider.GetComponent<Player>().Damage();
+                    hit.collider.GetComponent<Player>().Damage(atk);
                 }
             }
         }
+    }
+
+    //創造一個名為hp的浮點數，名為hp
+    public float hp = 100;
+
+    /// <summary>
+    /// 敵人.受傷事件
+    /// </summary>
+    /// <param name="damage"></param>
+    public void Damage(float damage)
+    {
+        hp -= damage;
+        ani.SetTrigger("受傷觸發");
+
+        if (hp <= 0) Dead();
+    }
+
+    /// <summary>
+    /// 敵人.死亡事件
+    /// </summary>
+    private void Dead()
+    {
+        nav.isStopped = true; //關閉導覽器
+        enabled = false; //關閉這個腳本
+        ani.SetBool("死亡開關",true); //播放"死亡開關"這個動畫
     }
 
     /// <summary>
