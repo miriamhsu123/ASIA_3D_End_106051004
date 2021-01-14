@@ -111,7 +111,8 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Dead()
     {
-        ani.SetTrigger("死亡觸發");
+
+        ani.SetBool("死亡開關", true);
 
         // 鎖定移動與旋轉
         vThirdPersonController vt = GetComponent<vThirdPersonController>();
