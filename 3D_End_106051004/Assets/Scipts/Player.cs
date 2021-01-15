@@ -3,6 +3,8 @@ using Invector.vCharacterController;    // 引用 套件
 
 public class Player : MonoBehaviour
 {
+    public GameObject gameover;
+    
     private float hp = 100;
     private Animator ani;
     /// <summary>
@@ -113,6 +115,7 @@ public class Player : MonoBehaviour
     {
 
         ani.SetBool("死亡開關", true);
+        gameover.SetActive(true);
 
         // 鎖定移動與旋轉
         vThirdPersonController vt = GetComponent<vThirdPersonController>();
